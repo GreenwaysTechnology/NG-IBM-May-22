@@ -2,7 +2,10 @@
     "compilerOptions": {
         "outDir": "build",
         "watch": true ,
-        "target" : "ES6"       
+        "target" : "ES6",
+        "noEmitOnError": false ,
+        "noImplicitAny": true
+
     },
     "exclude": [
         "node_modules"

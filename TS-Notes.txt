@@ -606,29 +606,547 @@ console.log(`Average Cost ${avg}`) //Infinity
 TS has created strong data types based on the dynmaic types provided by js
 (strings,numbers(NaN,infinity),boolean,undefined,object(null),functions)
 
+java 
+int a =10;
+
+a="hello" ; it would be compile time error.
+
 TS offers data types into major classification
-1.prmitive data types
+1.primtives data types 
+ strings,numbers(NaN,infinity),boolean,undefined 
 2.Reference data types
+ Objects,functions,Enums,Arrays
+3.Other types
+ void
+ any
+ unknown
+
+Custom Types
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,		
+
+       "Prmitive types are represented in smaller case - string,number,boolean"
+       "Object types are represented in TitleCase - Employee,Array,Promise"
+
+
+How to declare variable with strong typing?
+
+1.explicit type
+
+var/let/const variable:type = literal
+
+eg:
+ let a:string = "Hello"
+
+ a = 100; It is compile time error.
+
+//primitive types: Explicit type declaration
+
+//string
+let firstName: string = "Subramanian"
+console.log(`First Name ${firstName}`)
+//reinitalize with number
+firstName =100
+
+[3:10:30 pm] File change detected. Starting incremental compilation...
+
+src/index.ts:7:1 - error TS2322: Type 'number' is not assignable to type 'string'.
+
+7 firstName =100
+  ~~~~~~~~~
+
+[3:10:30 pm] Found 1 error. Watching for file changes.
+
+//primitive types: Explicit type declaration
+
+//string
+let firstName: string = "Subramanian"
+console.log(`First Name ${firstName}`)
+//reinitalize with number
+//firstName =100
+//numbers : 64 bit
+let salary: number = 100.89
+console.log(`Salary ${salary}`)
+
+//booleans
+let isValid:boolean = true
+console.log(`Valid ${isValid}`)
+
+
+2.implicit type / type inference
+
+//implicit : type inference
+//once the variable is delcared with some literal its type is considered as type automatically in future assigments.
+
+//a:number
+let a = 10
+console.log(`a is ${a}`)
+//a= "hello" type inference
+
+let firstName = "Subramanian"
+let isValid = true
+
+let b;
+b = 100
+
+let c:number
+
+				Typescript Compiler Behaviour
+
+
+By default Typescript compiler compiles the code even though there is compile time error.
+
+if you want to stop generating code, if there is compile time error.
+
+noEmitOnError:true
+
+tsconfig.json
+{
+    "compilerOptions": {
+        "outDir": "build",
+        "watch": true,
+        "target": "ES6",
+        "noEmitOnError": true
+    },
+    "exclude": [
+        "node_modules"
+    ],
+    "files": [
+        "src/index.ts"
+    ]
+}
+
+..............................................................................................
+				Type erasor
+.............................................................................................
+
+ Types will be erased after compilation; any ts specific notations will not be available 
+after code is compiled.
+
+.............................................................................................
+
+			 undefined
+
+//undefined
+
+//implicit undefined
+let a;
+console.log(`a ${a}`)
+a = 10
+console.log(`a ${a}`)
+a = "Hello"
+console.log(a)
+
+//explicit type with undefined
+let b: number;
+console.log(`b ${b}`)
+b = 10
+console.log(`b ${b}`)
+// b="Hello"
+// console.log(`b ${b}`)
+
+//variables with undefined as value : implicit
+let c = undefined
+console.log(`c ${c}`)
+c = 10;
+console.log(`c ${c}`)
+c =true
+console.log(`c ${c}`)
+
+let d:undefined =undefined
+console.log(`d ${d}`)
+// d =10; //error
+..............................................................................................
+				 any
+
+Typescript as of now forces us to use   follow type rules, that means the variable is declared with number type , it should hold number only.
+
+What if i want loosly typed variables, i dont know in advance what is type of variable would be.
+
+any is good choice.
+
+noImplicitAny
+
+Recall that in some places, TypeScript doesn’t try to infer types for us and instead falls back to the most lenient type: any. This isn’t the worst thing that can happen - after all, falling back to any is just the plain JavaScript experience anyway.
+
+However, using any often defeats the purpose of using TypeScript in the first place. The more typed your program is, the more validation and tooling you’ll get, meaning you’ll run into fewer bugs as you code. Turning on the noImplicitAny flag will issue an error on any variables whose type is implicitly inferred as any.
+
+let myvar:any = "hello";
+console.log(myvar.toString())
+
+Note: this flag will be activated only inside function args , not as regular variable declaration.
+.............................................................................................
+				     null
+
+null:
+.....
+ It is similar to undefined. No valid literal is assigned. No valid Object literal is assigned.
+null itself object , but no value is present.
+
+In javascript apps, null means that variable is going to hold object in future assignements.
+
+let emp = null
+console.log(emp)
+console.log(emp.id)
+
+3:48:42 pm] File change detected. Starting incremental compilation...
+
+src/index.ts:5:13 - error TS2531: Object is possibly 'null'.
+
+5 console.log(emp.id)
+              ~~~
+
+[3:48:42 pm] Found 1 error. Watching for file changes.
+
+//null
+
+let emp = null
+console.log(emp)
+// console.log(emp.id)
+// emp = {
+//     id: 1
+// }
+//how to fix runtime error with null
+//using if else
+if (emp) {
+    console.log(emp.id)
+} else {
+
+}
+//using tenary operator
+emp ? console.log(emp.id) : console.log("0");
+
+//typescript offers more operators : safe navigation operator
+console.log(emp?.id ? emp.id : 0)
+
+//elivish operator??
+console.log(emp?.id ?? 0)
+
+// emp = {
+//     id: 1
+// }
+// console.log(emp.id)
+..............................................................................................
+				functions
+..............................................................................................
+
+
+//name is arg , here name type becomes implicitly any
+function sayGreet(name){
+   return name
+}
+console.log(sayGreet('Subramanian'))
+console.log(sayGreet(100))
+console.log(sayGreet(true))
+
+variable must have any type including "any"
+function sayGreet(name){
+   return name
+}
+here name has no type , means "implicit any", i have to force to have data type including any
+
+       "noImplicitAny": true  -  dont keep implicit any, you can keep explicit any
 
 
 
 
+//name is arg , here name type becomes implicitly any
+//this is implicit any ; not recommended
+// function sayGreet(name){
+//    return name
+// }
+//this is explicit any : recommended
+function sayGreet(name: any) {
+   return name
+}
+
+console.log(sayGreet('Subramanian'))
+console.log(sayGreet(100))
+console.log(sayGreet(true))
+//if you only strong typing
+
+function sayHai(name: string) {
+   return `hai ${name}`
+}
+console.log(sayHai('Subramanian'))
+// console.log(sayHai(100))
+// console.log(sayHai(true))
+
+//return type : impliciltly return type is infered based on return value
+
+// function getValue(){
+//    return 10
+// }
+
+//return type : explicit return type is can be reprsented here
+function getValue(): number {
+   //return true
+   return 10
+}
+console.log(getValue())
+.............................................................................................
+				default args and optional values
+..............................................................................................
+
+default args are es 6 features
+
+//default args
+let add = function (a: number = 0, b: number = 0): number {
+    return a + b
+}
+console.log(add(10, 10))
+console.log(add()) //if dont pass , compiler will give error.
+
+//optional args
+let multiply = function (a?: number, b?: number): number {
+    return a * b
+}
+console.log(multiply(10, 10))
+console.log(multiply())
+...........................................................................................
+Arrow functions:
+//arrow function : simple function which replaces es 5 anonmous functions
+
+//es 5 function
+let add = function (a: number = 0, b: number = 0) {
+    return a + b
+}
+//
+console.log(add(10, 10))
+//arrow style
+add = (a: number = 0, b: number = 0) => {
+    return a + b
+}
+console.log(add(10, 10))
+
+//if function has only one return statement : remove return and {}
+add = (a: number = 0, b: number = 0) => a + b
+console.log(add(10, 10))
+.............................................................................................
+					Union type
+
+function Mode(varient: "dark" | "light") {
+    console.log(varient)
+}
+Mode("dark")
+Mode("light")
+// Mode("medium")
+function Person(gender: "Male" | "Female" | "Third" | undefined, active: true | false) {
+    console.log(gender, active)
+}
+Person("Female", true)
+Person("Male", false)
+
+function PrintId(id: string | number | undefined) {
+    console.log(id)
+}
+PrintId("1");
+PrintId(1);
+PrintId(undefined)
+
+function PrintIdV2(id: string | number | undefined) {
+    //console.log(id.toUpperCase())
+    if (typeof id === "string") {
+        // In this branch, id is of type 'string'
+        console.log(id.toUpperCase());
+    } else {
+        // Here, id is of type 'number'
+        console.log(id.toFixed());
+    }
+}
+PrintIdV2("abc")
+PrintIdV2(124.782323)
+.............................................................................................
+				Object oriented Programming In TS
+............................................................................................
+
+class declaration
+  instance variables , methods
+  constructors and parameters
+  create instance
+ 
+
+class Customer {
+    //instance variables
+    id: number = 0
+    name: string = "default"
+    status: boolean = true
+
+    //constructor
+    constructor(){
+        console.log('constructor is called')
+    }
+
+    //instance methods
+    calculate(qty: number = 0, price?: number): number {
+        return qty * price
+    }
+}
+//create instance
+//customer is reference variable
+//new is memory allocation operator
+//Customer()  is constructor call
+let customer = new Customer();
+console.log(`id: ${customer.id} name ${customer.name} status ${customer.status} ${customer.calculate(200,2000)}`)
+
+state initalization(instance variable init):
+
+1.direct -hardcoded
+2.after object creation
+3.during object creation - constructor parameters and args
 
 
+1.direct -hardcoded inside class directly
+
+class Customer {
+    //instance variables :hardcoded values
+    id: number = 0
+    name: string = "default"
+    status: boolean = true
+
+    //constructor
+    constructor(){
+        console.log('constructor is called')
+    }
+
+    //instance methods
+    calculate(qty: number = 0, price?: number): number {
+        return qty * price
+    }
+}
+//create instance
+//customer is reference variable
+//new is memory allocation operator
+//Customer()  is constructor call
+let customer = new Customer();
+console.log(`id: ${customer.id} name ${customer.name} status ${customer.status} ${customer.calculate(200,2000)}`)
+..............................................................................................
+
+After object creation:
+
+class Customer {
+    //instance variables :hardcoded values
+    id: number = 0
+    name: string = "default"
+    status: boolean = true
+
+    //constructor
+    constructor() {
+        console.log('constructor is called')
+    }
+
+    //instance methods
+    calculate(qty: number = 0, price?: number): number {
+        return qty * price
+    }
+}
+let customer = new Customer();
+//init variables after object creation
+customer.id = 100;
+customer.name = 'subramanian'
+customer.status = true
+console.log(`id: ${customer.id} name ${customer.name} status ${customer.status} ${customer.calculate(200, 2000)}`)
+..............................................................................................
+				Dependency injection: Constructor args
+..............................................................................................
+
+class Customer {
+    //instance variables 
+    id: number
+    name: string
+    status: boolean
+    //constructor args are called local variables
+    constructor(id: number = 0, name: string = "default", status: boolean = false) {
+        //this keyword is used to access instance variables
+        this.id = id;
+        this.name = name;
+        this.status = status
+    }
+
+    //instance methods
+    calculate(qty: number = 0, price?: number): number {
+        return qty * price
+    }
+}
+let customer = new Customer();
+console.log(`id: ${customer.id} name ${customer.name} status ${customer.status} ${customer.calculate(200, 2000)}`)
 
 
+customer = new Customer(23, "Ram", true);
+console.log(`id: ${customer.id} name ${customer.name} status ${customer.status} ${customer.calculate(200, 2000)}`)
+.............................................................................................
+.............................................................................................
+				 Encaspulation
+.............................................................................................
+Encapsulation:
+..............
+To Prevent code sharing from one code to another.
+
+code - collection of classes, variables,functions,......
+
+code is represented inside file.
+
+pl provides keywords to ensure that , how  we can allow the code to be shared
+
+TS provides keywords to prevent code sharing
+ 
+ -public - any where
+ -private - with in class 
+ -protected - with in class + inheritance
+
+Note:
+ keywords only can be applied for instance variables and methods only. not for class,interface,abstract class.
 
 
+public:
+ by default all variables and methods are public.
+
+class Customer {
+    //instance variables 
+    public id: number
+    public name: string
+    public status: boolean
+    //constructor args are called local variables
+    constructor(id: number = 0, name: string = "default", status: boolean = false) {
+        //this keyword is used to access instance variables
+        this.id = id;
+        this.name = name;
+        this.status = status
+    }
+
+    //instance methods
+    public calculate(qty: number = 0, price?: number): number {
+        return qty * price
+    }
+}
+let customer = new Customer();
+console.log(`id: ${customer.id} name ${customer.name} status ${customer.status} ${customer.calculate(200, 2000)}`)
 
 
+customer = new Customer(23, "Ram", true);
+console.log(`id: ${customer.id} name ${customer.name} status ${customer.status} ${customer.calculate(200, 2000)}`)
 
+private:
 
+class Authentication {
+    private userName:string;
+    private password:string;
 
+    constructor(userName?:string,password?:string){
+        this.userName = userName
+        this.password = password
+    }
 
+    public getUserInfo():string{
+        return `${this.userName} ${this.password}`
+    }
+}
+let auth = new Authentication("admin","admin")
+/**
+ * src/index.ts:11:6 - error TS2341: Property 'userName' is private and only accessible within class 'Authentication'.
 
+11 auth.userName = 'admin'
 
-
-
-
-
+ */
+// auth.userName = 'admin'
+console.log(auth.getUserInfo())
 
