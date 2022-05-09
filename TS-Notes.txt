@@ -391,5 +391,244 @@ E:\session\IBM\2022\may\ng-session\ts-apps> npm run compile
     <h1>Typescript app</h1>
     <script src="build/index.js"></script>
 </body>
+..............................................................................................
+
+How to clone repo? and how to use?
+
+git clone https://github.com/GreenwaysTechnology/NG-IBM-May-22
+
+go to project location
+
+npm install
+..............................................................................................					 Typescript language fundamentals
+............................................................................................
+
+How to declare variables and how to use data types?
+
+Java script is dynamic and weakly typed language, data types are not necessary during declaration
+
+eg:
+  var i =10 
+ES 6 keywords
+  let j=10;
+  const pi=3.14
+
+index.js
+  let j=10;
+  j="hello".
+
+In ES6 APPS  let and const are recommended.
+
+ES 6 core concepts:
+
+Variable delcaration;
+
+var - es 5
+let  - es6 
+const - es6
+
+var is not block scoped and let and const is block scoped.
+
+In ES6 APPS  let and const are recommended.
+
+The problems with ES 6:
+
+When es6 was introduced, the node and browsers vendors were not ready to accept
+es6 keywords
+
+let ,const never work in older node and browsers.
+
+that time browers were supported only ES 5 version of js.
+
+browsers were not ready that time, but develoers felt,and supported lot on es6.
+
+Then how to run es 6 code on browsers which dont support.
+
+The birth of "Transpilers"  : a special compilers which converts es6 to es5,
+
+developer write code in es6 ---->transpiler-->es 5
+
+Type script code is written based on ES 6 code only.
+
+eg: babel.js 
+ higher version -to lower version
+
+eg : tsc
+ es6 to es5
+ +
+ type verification
+
+         "ts compiler by default converts es6 code into es5."
+
+let---------var
+
+{
+    "compilerOptions": {
+        "outDir": "build",
+        "watch": true,
+        "target" :"ES6"
+    },
+    "exclude": [
+        "node_modules"
+    ],
+    "files": [
+        "src/index.ts"
+    ]
+}
+............................................................................................
+				  Type System
+
+JS has no compile time data types,thats where TS was created in order to add compile time data types.
+
+if any vilation happens during compile time , compiler picks ups the errors and show those errors during dev cycle.
+
+1.Dynamic types
+   Runtime Types
+2.Static types
+   Compile Time Types
+
+Javascript is Dynamic typed language,Types are identified during runtime only.
+
+Types are identified based on "literals" in javascript.
+
+Literals:
+
+1.number
+2.string
+3.boolean
+4.undefined
+5.NaN
+6.infinity
+7.null
+8.function
+9.object
+
+How to know the type of(runtime type of variable) ?
+
+"type of" operator
+
+Js types:
+1.number
+   number,NaN,infinity
+2.string
+3.undefined
+4.function
+5.object
+   object,null
+6.boolean
+
+//js types
+//strings : "" or '',``(back tick)
+let firstName = "Subramanian"
+let lastName = 'Murugan'
+//show
+let fullName = firstName + lastName // concation
+//concatnation
+console.log("Your Name " + fullName) // + for string concatnation
+console.log("Your Name ", fullName)
+//using back tick : string inter polation.
+fullName = `${firstName} ${lastName}`
+console.log(`Your Name ${fullName}`)
+
+//use case of `` and string interpolation: multi strings
+
+//traditional model
+let style = "background { color: red }" +
+    "container { width : 100 }" +
+    "panel {width : 1000}"
+
+let width = 1000
+let newStyle = `
+     background { color: red }
+     container { width : ${width} }
+     panel {width : ${width} }
+    `
+console.log(newStyle)
+//numbers : number type and its size is 64 bit -double
+let qty = 100
+let price = 900
+let totalPrice = qty * price
+console.log(`Total Price ${totalPrice}`)
+
+//booleans : true or false
+let isActive = true;
+console.log(`IsActive ${isActive}`)
+
+//undefined : variable is declared but no valid value(literal) is assigned
+
+let a; // undefined
+
+console.log(`a ${a}`)
+
+//NaN -  Not a Number :Error Code : Runtime error, due to numerical computation failers
+//Use case -1 : if you do compuation against undefined values
+
+let i; //undefined
+let j = 100 //100 value
+let r = i * j // undefined * value => NaN
+console.log(`Result ${r}`)
+
+//Use case 2: during type conversion - string to number conversion.
+
+let x = "100" //here value is 100 but type is string
+let y = 100
+//Type conversion:implicit type conversion
+let z = x * y  // here js converts string into number automatically: implicit type conversion
+console.log(`The Result is ${z}`)
+//Type conversion:Explicit type conversion using parseMethods
+z = parseFloat(x) * y  // here js converts string into number automatically: implicit type conversion
+console.log(`The Result is ${z}`)
+
+//Type conversion:Explicit type conversion using unary + operator
+z = +x * y  // here js converts string into number automatically: implicit type conversion
+console.log(`The Result is ${z}`)
+
+//Type conversion:Explicit type conversion using Number function
+z = Number(x) * y  // here js converts string into number automatically: implicit type conversion
+console.log(`The Result is ${z}`)
+
+//Type conversion and NaN
+let p = "$1000"
+// let t = p *100 //here type conversion fails so that we get error
+// let t = parseFloat(p) *100 //here type conversion fails so that we get error
+// let t = +(p) *100 //here type conversion fails so that we get error
+let t = Number(p) * 100 //here type conversion fails so that we get error
+
+console.log(`The Result is ${t}`)
+
+//infinity
+let cost = 100;
+let avg = cost / 0
+console.log(`Average Cost ${avg}`) //Infinity
+..............................................................................................
+				 Static Datatypes from Typescript
+
+TS has created strong data types based on the dynmaic types provided by js
+(strings,numbers(NaN,infinity),boolean,undefined,object(null),functions)
+
+TS offers data types into major classification
+1.prmitive data types
+2.Reference data types
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
