@@ -352,11 +352,44 @@ E:\session\upgrad\ts-apps>  code .
 }
 
 
-8.test inside browser
-  <script src="src/index.js">
+10.test inside browser
 
+Create html file inside project dir
 
+ts-apps
 
+ -index.html
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Typescript-App</title>
+</head>
+<body>
+    <h1>Typescript app</h1>
+    <script src="src/index.ts"></script>
+</body>
+</html>
+
+Here we need to test whether it is working or not
+
+in order to test this , you need to install live server. which is embeded webserver for vs code.
+
+11.compile ts code 
+
+open cmd prompt and go to the project location
+
+E:\session\IBM\2022\may\ng-session\ts-apps> npm run compile
+
+12.After compilation, you can see the folder in side project dir and file called index.js
+
+13. include that index.js inside index.html
+<body>
+    <h1>Typescript app</h1>
+    <script src="build/index.js"></script>
+</body>
 
 
