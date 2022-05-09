@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+        "outDir": "build"        
+    },
+    "exclude": [
+        "node_modules"
+    ],
+    "files": [
+        "src/index.ts"
+    ]
+}
