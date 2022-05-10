@@ -3,8 +3,10 @@
         "outDir": "build",
         "watch": true ,
         "target" : "ES6",
-        "noEmitOnError": false ,
-        "noImplicitAny": true
+        "noEmitOnError": true ,
+        "noImplicitAny": true,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true
 
     },
     "exclude": [
