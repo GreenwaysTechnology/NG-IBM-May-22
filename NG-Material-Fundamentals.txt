@@ -713,6 +713,341 @@ ng g c footer/footer  --flat=true --export=true  --module=footer
 
 ng g m body --module=app   
 ng g c body/body  --flat=true --export=true --inline-style=true --skip-tests=true   --module=body
+..............................................................................................
+				MVC - Model view Controller
+
+Angular is MVC framework.
+
+M- Model - State
+V -View - Template
+C -Controller - Component.
+
+State : Data
+In Angular state can represented 
+
+primitives
+objects
+arrays
+
+controller === component
+
+.............................................................................................
+Data binding:
+ Transfering state to ui(view)
+
+Types of databinding
+
+1.interpolation
+2.property binding
+3.attribute binding
+4.event binding
+5.two way data binding
+6.class binding
+7.style binding
+
+
+1.interpolation:
+
+Transfering data(state) from the controller to template(view)
+
+Template: collection of html elements + angular instructions
+
+angular instructions: special keywords
+
+{{}}
+[]
+*
+()
+#
+
+{{}} - bind state variable inside template.
+
+
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-greeter',
+  templateUrl: './greeter.component.html',
+  styleUrls: ['./greeter.component.css']
+})
+export class GreeterComponent implements OnInit {
+
+  //state 
+  name: string = "Subramanian"
+  message: string = "Hello"
+
+  constructor() { }
+
+  ngOnInit(): void {
+  }
+
+}
+
+<div>
+     <h1>{{message}} {{name}} !</h1>
+</div>
+.............................................................................................
+
+State :
+
+string
+number
+boolean
+object 
+array
+
+import { Component, OnInit } from '@angular/core';
+import { Address } from '../types/address.type';
+import { Movie } from '../types/movie.type';
+
+@Component({
+  selector: 'app-hero',
+  templateUrl: './hero.component.html',
+  styleUrls: ['./hero.component.css']
+})
+export class HeroComponent implements OnInit {
+
+  //state
+  name: string = "James Bond"
+  age: number = 50
+  status: boolean = true
+  address: Address = {
+    city: 'new york',
+  }
+  movies: Array<Movie> = [{
+    id: 1,
+    name: 'Goldfinger'
+  },
+  {
+    id: 2,
+    name: 'Dr.No'
+  },
+  ]
+
+
+
+  constructor() { }
+
+  ngOnInit(): void {
+  }
+
+}
+
+<div>
+    <h1>Hero Details</h1>
+    <h2>Name {{name}}</h2>
+    <h2>Age {{age}}</h2>
+    <h3>City {{address.city}}</h3>
+    <h3>Movies</h3>
+</div>
+
+
+
+in order to iterate an arry, we need for loop.
+ <ul>
+        <li *ngFor="let movie of movies">
+            <span>{{movie.id}} {{movie.name}}</span>
+        </li>
+    </ul>
+..............................................................................................
+				Service Layer
+..............................................................................................
+
+Service is object going to hold biz logic and data.
+
+In Mvc , service is acting as bridge between UI and back end
+
+
+ View -------------->Controller--------->Service----->Backend
+
+ View-----------------Component---------Service----->Backend.
+
+
+How to get data from the service layer?
+
+How to declare service object?
+
+import { Injectable } from '@angular/core';
+import { Profile } from '../types/profile.type';
+
+@Injectable({
+  providedIn: 'root' // angular uses global injector to create service object
+})
+// @Injectable()
+export class ProfileService {
+
+  //state
+  private profiles: Array<Profile> = [{
+    id: 1,
+    name: 'Subramanian',
+    status: true,
+    gender: "Male",
+    address: {
+      city: 'New York'
+    }
+  },
+  {
+    id: 2,
+    name: 'Kavitha',
+    status: true,
+    gender: "Female",
+    address: {
+      city: 'London'
+    }
+  },
+  {
+    id: 3,
+    name: 'John',
+    status: false,
+    gender: "Male",
+    address: {
+      city: 'CA'
+    }
+  }
+
+  ];
+
+  constructor() { }
+
+  //biz methods
+
+  public findAll(): Array<Profile> {
+    return this.profiles
+  }
+
+}
+.............................................................................................
+
+				Controller - Service Integration
+...........................................................................................
+
+
+Service creation:
+ng g s profiles/profile  --flat=true
+
+
+Types:
+
+export class Profile {
+    id: number = 0
+    name: string = ""
+    status: true | false = false
+    gender?: "Male" | "Female" | "Third"
+    address?: {
+        city: string
+    } | null
+}
+
+import { Injectable } from '@angular/core';
+import { Profile } from '../types/profile.type';
+
+@Injectable({
+  providedIn: 'root' // angular uses global injector to create service object
+})
+// @Injectable()
+export class ProfileService {
+
+  //state
+  private profiles: Array<Profile> = [{
+    id: 1,
+    name: 'Subramanian',
+    status: true,
+    gender: "Male",
+    address: {
+      city: 'New York'
+    }
+  },
+  {
+    id: 2,
+    name: 'Kavitha',
+    status: true,
+    gender: "Female",
+    address: {
+      city: 'London'
+    }
+  },
+  {
+    id: 3,
+    name: 'John',
+    status: false,
+    gender: "Male",
+    address: {
+      city: 'CA'
+    }
+  }
+
+  ];
+
+  constructor() { }
+
+  //biz methods
+
+  public findAll(): Array<Profile> {
+    return this.profiles
+  }
+
+}
+
+Controller
+import { Component, OnInit } from '@angular/core';
+import { Profile } from '../types/profile.type';
+import { ProfileService } from './profile.service';
+
+@Component({
+  selector: 'app-profile',
+  templateUrl: './profile.component.html',
+  styleUrls: ['./profile.component.css']
+})
+export class ProfileComponent implements OnInit {
+
+  //profiles 
+  profiles: Array<Profile>
+
+  //inject ProfileService object
+  constructor(private profileService: ProfileService) {
+    this.profiles = this.profileService.findAll()
+  }
+
+  ngOnInit(): void {
+  }
+
+}
+<div>
+    <div *ngFor="let profile of profiles">
+        <h3>Id {{profile.id}}</h3>
+        <h3>Name {{profile.name}}</h3>
+        <h3>Status {{profile.status ? "Active" :"InActive"}}</h3>
+        <h3>Gender {{profile.gender}}</h3>
+        <h3>City {{profile.address?.city ?? 'No City'}}</h3>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
