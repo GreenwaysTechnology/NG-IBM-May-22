@@ -1,0 +1,718 @@
+					Angular fundamentals
+..............................................................................................
+Angular BootStrap Process:
+..........................
+
+Landing Page:
+
+ In the SPA , there will be one physical page, rest of the pages are virtual(pages are created by javascript during runtime-DOM)
+
+The landing page is called "index.html".
+
+When SPA app is loaded into web browser, the first page is loaded is called index.html only.
+
+eg:
+  http://www.example.com ------index.html
+
+Flow of SPA:
+
+1.index.html
+    browser will try to construct inital tree,JS engine initalize the DOM Tree---->Angular Engine will kick start --> will initalize the App.
+
+2.browser loads angular js files in order
+
+<script src="runtime.js" type="module"></script>
+    -Angular Runtime
+<script src="polyfills.js" type="module"></script>
+    -browser specific libs
+<script src="styles.js" defer></script>
+    -css styles are loaded
+<script src="vendor.js" type="module"></script>
+    -angular framework and thrid party libs and apis
+
+<script src="main.js" type="module"></script>
+    -Your app will be loaded
+
+ main.ts(js)
+    |
+     --->app.module.ts(app.module.js)
+            |
+            -----app.component.ts(app.component.js)
+                     |
+                     <app-root> content will be displayed
+
+..............................................................................................
+
+
+
+Exploring files:
+
+main.ts
+
+import { enableProdMode } from '@angular/core';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+
+import { AppModule } from './app/app.module';
+import { environment } from './environments/environment';
+
+if (environment.production) {
+  enableProdMode();
+}
+
+platformBrowserDynamic().bootstrapModule(AppModule)
+  .catch(err => console.error(err));
+
+@angular - package Name -  private package
+core -  sub folder -project
+@angular/core 
+Any angular apis starts @angular
+
+npm packages are two types
+
+1.private packages
+   private packages maintianed by a companys 
+   all private packages starts with @
+
+https://docs.npmjs.com/creating-and-publishing-private-packages
+
+2.public packages
+  public packages are maintained by a company or opensource.
+  
+Angular app by default runs in dev env.
+enableProdMode() function which enables default production settings.
+...
+
+platformBrowserDynamic()
+  It is function which returns object called "PlatformRef"
+
+PlatformRef represents browser.
+
+platformBrowserDynamic().bootstrapModule(AppModule).catch(err=>console.log(err))
+   BootStrap angular app into browser.
+   catch block will be called if browser fails to load ng app.
+
+...........................................................................................
+				App Module
+...........................................................................................
+
+Angular is highly modular architecture.
+
+Angular application is collection of modules.
+
+Types of modules:
+
+1.ES 6 Modules
+   Used to isloate files and folders , used to share code.
+   It is other wise called physical modularity
+   Which uses import and export keywords
+
+2.Angular Modules
+  Used to isloate objects logically.
+  It is other wise called as "logical modularity"
+
+    "Every ng app must have one single container module called "app module".
+
+First app module must be loaded, then all sub modules will be loaded.
+
+app.module.ts
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+
+import { AppComponent } from './app.component';
+
+@NgModule({
+  declarations: [
+    AppComponent
+  ],
+  imports: [
+    BrowserModule
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+..............................................................................................
+				Root View/Page
+
+
+AppComponent.ts
+ It is file which creates DOM tree , Which will render first 
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+  title = 'my-first-project';
+}
+..............................................................................................
+				Angular Infra Structure Objects
+..............................................................................................
+
+Angular infra objects
+
+1.module
+2.component
+3.service
+4.directive
+5.pipes
+
+Note : 
+  in ng we never create infra object using new keyword
+ng depedency injector will create object , we use it.
+
+How to create angular infra objects / How to identify this object is module/component?
+
+Using decorators. Angular provides lot of decorators
+
+Built in decorators
+ Component 
+ ContentChild 
+ ContentChildren
+ Directive Host 
+ HostBinding
+ HostListener
+ Inject 
+ Injectable 
+ Input
+ NgModule
+ Optional 
+ Output 
+ Pipe
+ Self
+ SkipSelf 
+ ViewChild 
+ ViewChildren
+.............................................................................................
+				Angular Infra Object - Component
+.............................................................................................
+
+What is component?
+
+ Component is Object which represents User interface.
+
+What is difference between normal object and Component?
+
+Any Object has three characteristics
+
+1.state - data
+2.identification - identifier
+3.behaviour - methods
+
+Angular component also having state,behaviour but it has some extra properties
+ =>User interface information called templates
+
+template is collection of html elements and angular instructions.
+..............................................................................................
+
+Most of decorator takes parameter , mostly object called "Decorator meta data"
+
+@Component({})
+
+How to create component?
+
+
+Steps: 
+1.declare class and export
+export class AppComponent{
+  
+}
+2.decorate the class with @Component Decorator
+
+@Component({
+  selector: 'app-root', // custom element name
+  template: `
+      <h1>IBM Angular </h1>
+  `
+})
+export class AppComponent {
+
+}
+
+Types of template:
+
+1.inline template
+   Template is written within component defintion
+template: `
+      <h1>IBM Angular </h1>
+  `
+
+2.external template
+  Template is written outside component definition using html file
+ app.component.html
+import { Component } from "@angular/core";
+
+@Component({
+  selector: 'app-root', // custom element name
+  // template: `
+  //     <h1>IBM Angular </h1>
+  // `
+  templateUrl: 'app.component.html'
+})
+export class AppComponent {
+
+}
+.............................................................................................
+				How to create our own components
+.............................................................................................
+
+in order to write components , you have to understand how your app looks like.
+
+You need to html first , html is organized hierarchicaly 
+
+eg:
+
+ <body>
+    <div>
+	 <div>Header</div>
+         <div>main</div>
+	 <div>Footer</div>
+    </div>
+ </body>
+ 
+ <body>
+    <div>
+	 <header>
+		<ul>
+                    <li><a href="contact">contact</li>
+                </ul>
+                <div>
+			<input type="search">
+                <div>
+                <div>
+			<img src="logo"></img>
+		</div>
+		
+	</header>
+
+	<div>
+		
+	</div>
+         
+    </div>
+ </body>
+
+....
+
+Every component is identified by selector(custom element)
+
+app-header
+  app-menubar
+  app-logo
+app-footer
+app-body
+
+ <body>
+    <app-root>
+	<div>
+		<app-header></app-header>
+	<div>
+   </app-root>
+ </body>
+
+eg:
+src/header.component.ts
+import { Component } from "@angular/core";
+
+
+@Component({
+    selector:'app-header',
+    templateUrl:'header.component.html'
+})
+export class HeaderComponent {
+
+}
+src/header.component.html
+<header>
+    <h1>IBM angular</h1>
+</header>
+
+src/app.component.html
+<div>
+    <app-header></app-header>
+</div>
+
+
+Error: src/app/app.component.html:2:3 - error NG8001: 'app-header' is not a known element:
+1. If 'app-header' is an Angular component, then verify that it is part of this module.
+2. If 'app-header' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.
+
+
+Why this error?
+
+Note down, in ng every thing is object including component,module....
+
+In ng, we never create object by using new operator
+
+let headercomponent = new HeaderComponent().
+
+Ng creates object using the concept called "dependency injection".
+
+Angular Creates objects automatically , we dont need to create them.
+
+How angular understand that , object need to be created. 
+
+Thats where configuration comes into picture.
+
+............................................................................................
+				How to create app module object
+.............................................................................................
+
+steps:
+
+1.declare class
+export class AppModule {
+
+}
+2.decorate with @NgModule decorator
+
+NgModule decorator is used to create "Angular Module Object"
+
+import { NgModule } from "@angular/core";
+
+@NgModule({
+  
+})
+export class AppModule {
+
+}
+
+3.NgModule meta data.
+
+ Contains the list of classes for which object need to be created
+
+@NgModule({
+  declarations:[],
+  imports:[],
+  providers:[]
+})
+export class AppModule {
+
+}
+
+Types of classes/Objects in the angular
+
+1.View Objects
+   Component,Directive,Pipe
+
+2.Module(sub Module) Objects
+   any class which is decorated with @NgModule
+3.Services
+   Any class which is decorated with @Injectable
+
+ declarations:[] 
+    contains view Objects
+ imports:[],
+     contains submodule objects
+ providers:[]
+     contains service objects
+
+
+import { NgModule } from "@angular/core";
+import { BrowserModule } from "@angular/platform-browser";
+import { AppComponent } from "./app.component";
+import { HeaderComponent } from "./header.component";
+
+@NgModule({
+  declarations: [AppComponent,HeaderComponent],
+  imports: [BrowserModule],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule {
+
+}
+..............................................................................................
+			  Angular coding best pratices -Angular Style Guide
+..............................................................................................
+https://angular.io/guide/styleguide
+
+File structure conventions:
+
+->file must follow the domain model.
+
+product:
+ Ng has lot of infra objects (module,component,pipe,services...)
+
+component:
+ It has so many files
+ .ts file
+    component file
+    component spec file -  unit testing file
+ .html file
+ .css file
+
+header.component.ts | spec.ts | .html | .css
+
+header.component.ts
+header.component.html
+header.component.css
+header.component.spec.ts
+
+Modules
+ header.module.ts
+
+
+style guide for file names
+
+domainname.component|service|directive|pipe.ts
+hero.component.ts
+hero.service.ts
+hero.directive.ts
+hero.pipe.ts
+
+Custom elements Naming convention:Component selectors
+
+ <app-root> - recommended
+  
+ <approot>  - not recommended.
+
+Do use dashed-case or kebab-case for naming the element selectors of components.
+............................................................................................
+
+class Names:
+
+ 1.Noun
+ 2.should be meaningfull
+ 3.should have suffix component,service,directive,pipe
+
+ HeaderComponent
+ HeaderService
+ HeaderDirective
+ HeaderPipe
+..............................................................................................
+Steps to create Component
+
+1.declare componenent class
+2.declare component html 
+3.write component logic
+4.dependency injection inside moudle
+5.refer the compoent inside template.
+............................................................................................
+				 Modularity
+............................................................................................
+
+Every angular app must be modular?
+
+1.plan physical modularity
+
+src/app - root folder
+
+You have to create sub folder which represents domain /feature
+
+src/app
+ 
+layouts
+  headers
+  footers
+
+headers
+  header    
+  menubar
+  search
+  logo
+heroes
+   hero
+   hero-list
+   shared
+
+villains
+  villain
+  villain-list
+  shared
+
+shared
+ shared.module.ts
+ init-caps.pipe.ts|spec.ts
+ filter-text.component.ts|spec.ts
+ filter-text.service.ts|spec.ts
+
+app.component.html | ts | spec | css 
+
+
+Steps : 
+
+1.create folder
+ src/app/footer
+
+2.create files inside footer
+ footer.component.html
+ footer.component.ts
+
+3.write code inside footer.component.ts and html
+
+footer.component.ts
+import { Component } from "@angular/core";
+@Component({
+    selector:'app-footer',
+    templateUrl:'footer.component.html'
+})
+export class FooterComponent{}
+
+footer.component.html
+<div>
+    <h2>Footer</h2>
+</div>
+
+3.Refer component class inside app module
+import { NgModule } from "@angular/core";
+import { BrowserModule } from "@angular/platform-browser";
+import { FooterComponent } from "./footer/footer.component";
+
+@NgModule({
+  declarations: [AppComponent,FooterComponent],
+  imports: [BrowserModule],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule {
+
+}
+
+4.refer selector inside app component.
+<div>
+  <app-header></app-header>
+  <app-footer></app-footer>
+</div>
+
+
+2.plan Logical  modularity
+
+=>For each domain, we must have logical modularity - sub module
+
+heroes
+   hero
+   hero-list
+   shared
+   heroes.module.ts
+
+All components related to that domain, must be injected into that submodule only, not inside
+main module.
+
+How to create submodule?
+
+Steps:
+1.declare class and decorate
+
+src/app/header/header.module.ts
+
+import { NgModule } from "@angular/core";
+import { HeaderComponent } from "./header.component";
+@NgModule({
+    declarations: [HeaderComponent],
+    imports: [],
+    providers: []
+})
+export class HeaderModule { }
+
+
+2.inject submodule into main module
+
+import { NgModule } from "@angular/core";
+import { BrowserModule } from "@angular/platform-browser";
+import { AppComponent } from "./app.component";
+import { FooterComponent } from "./footer/footer.component";
+import { HeaderModule } from "./header/header.module";
+// import { HeaderComponent } from "./header/header.component";
+
+@NgModule({
+  // declarations: [AppComponent,HeaderComponent,FooterComponent],
+  declarations: [AppComponent, FooterComponent],
+  imports: [BrowserModule, HeaderModule],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule {
+
+}
+
+After running you get error
+
+Error: src/app/app.component.html:2:3 - error NG8001: 'app-header' is not a known element:
+1. If 'app-header' is an Angular component, then verify that it is part of this module.
+2. If 'app-header' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.
+.............................................................................................
+				Module scope
+.............................................................................................
+	
+Any Components which are injected inside a module, which is available inside that module only.
+all components which belong to that module, only available to that module only.
+
+What if i want i access the component outside the module?
+
+ You have to make it public.
+
+How to make it?
+  using exports option
+
+import { NgModule } from "@angular/core";
+import { HeaderComponent } from "./header.component";
+@NgModule({
+    declarations: [HeaderComponent],
+    imports: [],
+    providers: [],
+    exports:[HeaderComponent] //share outside this module
+})
+export class HeaderModule { }
+
+..............................................................................................
+                       Angular CLI  - Automate && accelerate your work flow
+.............................................................................................
+
+Problems in the dev flow:
+
+Tasks:
+
+1.create folder
+2.create files - component-ts,html,css,spec
+3.create module
+4.declare class -cmp,service...
+5.refer the classes inside module
+6.you need to inject submodule into main module..
+
+
+
+if you repeate the same thing for every object , which increases lot of time.
+
+Automation:
+ code generation automation
+
+angular cli tool to generate code.
+
+Generates and/or modifies files based on a schematic.
+
+ng generate <schematic> [options]
+ng g <schematic> [options]
+
+
+
+Task:
+1.create folder
+2.create submodule
+
+ng g m footer --module=app
+
+create folder calleder footer
+update/inject footer module inside app
+
+create component, inside footer folder, inject into footer module, make it available public
+i dont want css file,i want html file,i dontwant spec file
+
+ng g c footer/footer  --flat=true --export=true --inline-style=true --skip-tests=true   --module=footer
+
+ng g c footer/footer  --flat=true --export=true  --module=footer
+
+
+ --flat=true :  create any thing inside exsiting folder
+ --export=true : make it public
+ --inline-style=true : i dont want css file
+ --skip-tests=true  :dont create spec files
+ --module=footer  : inject inside footer module
+
+ng g m body --module=app   
+ng g c body/body  --flat=true --export=true --inline-style=true --skip-tests=true   --module=body
+
+
+
