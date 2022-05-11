@@ -1021,7 +1021,204 @@ export class ProfileComponent implements OnInit {
         <h3>City {{profile.address?.city ?? 'No City'}}</h3>
     </div>
 </div>
+..............................................................................................
+.
+					Data initalization inside compoent
+..............................................................................................
 
+
+way to initalize the data:
+
+1.inside constructor.
+
+ message!: string;
+
+  constructor(private greeterService:GreeterService) {
+    this.message = this.greeterService.sayHello();
+  }
+
+but it is not recommended. constructors only used for di not for data initalization.
+
+Component Life cycle apis
+...........................
+
+Component Life Cycle Methods: hooks:
+   methods are called by angular runtime when component/directive goes in transistion.
+
+init and destory hook:
+......................
+
+init - called after constructor completes, where you can write resource insentive tasks
+  like api calls,timers,websocket integration.
+
+destory -called once if the component is removed from memory or from component tree
+   -cleanup activities.
+
+init and destroy is represented inside life cyle hooks interfaces
+
+OnInit interface
+ ngOnInit(): void {
+    throw new Error('Method not implemented.');
+  }
+init and destroy is represented inside life cyle hooks interfaces
+
+OnInit interface
+ ngOnInit(): void {
+    throw new Error('Method not implemented.');
+  }
+.......................................................................................
+			     Variable Assignment and typescript
+
+Inside class in angular all instance variables must be initalized in line or inside constructor
+
+export class ProfileComponent implements OnInit {
+
+  //profiles 
+  profiles: Array<Profile>
+
+  //inject ProfileService object
+  constructor(private profileService: ProfileService) { }
+
+  ngOnInit(): void {
+     this.profiles = this.profileService.findAll()
+  }
+
+}
+
+Here compiler throw error:
+error: src/app/profiles/profile.component.ts:13:3 - error TS2564: Property 'profiles' has no initializer and is not definitely assigned in the constructor.
+
+13   profiles: Array<Profile>
+
+//profiles 
+profiles: Array<Profile>
+ 
+ Here variable has undefined, as per style guide , variables must not be assigned with null or undefined.
+
+Solution:
+
+1.definite assignement
+  profiles!: Array<Profile>;
+
+2.with empty array
+  profiles: Array<Profile>=[]
+ 
+3. or 
+  profiles: Array<Profile>   | undefined 
+..............................................................................................
+.............................................................................................
+			 Services can have its own dependencies
+.............................................................................................
+
+
+src/app/shared/logger.service.ts
+
+import { Injectable } from '@angular/core';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class LoggerService {
+  private messages: string[] = [];
+  constructor() { }
+
+  add(message: string) {
+    this.messages.push(message);
+  }
+  fetch(): string[] {
+    return this.messages;
+  }
+
+  clear() {
+    this.messages = [];
+  }
+}
+
+//
+profile Service uses logger service
+import { Injectable } from '@angular/core';
+import { LoggerService } from '../shared/logger.service';
+import { Profile } from '../types/profile.type';
+
+@Injectable({
+  providedIn: 'root' // angular uses global injector to create service object
+})
+// @Injectable()
+export class ProfileService {
+
+  //state
+  private profiles: Array<Profile> = [{
+    id: 1,
+    name: 'Subramanian',
+    status: true,
+    gender: "Male",
+    address: {
+      city: 'New York'
+    }
+  },
+  {
+    id: 2,
+    name: 'Kavitha',
+    status: true,
+    gender: "Female",
+    address: {
+      city: 'London'
+    }
+  },
+  {
+    id: 3,
+    name: 'John',
+    status: false,
+    gender: "Male",
+    address: {
+      city: 'CA'
+    }
+  }
+
+  ];
+
+  constructor(private logger: LoggerService) { }
+
+  //biz methods
+
+  public findAll(): Array<Profile> {
+    this.logger.add('findAll profiles called')
+    return this.profiles
+  }
+
+}
+
+profile component uses logger service
+import { Component, OnInit } from '@angular/core';
+import { LoggerService } from '../shared/logger.service';
+import { Profile } from '../types/profile.type';
+import { ProfileService } from './profile.service';
+
+@Component({
+  selector: 'app-profile',
+  templateUrl: './profile.component.html',
+  styleUrls: ['./profile.component.css']
+})
+export class ProfileComponent implements OnInit {
+
+  //profiles 
+  profiles: Array<Profile> = []
+  messages: Array<String> = []
+
+  //inject rofileService object
+  constructor(private profileService: ProfileService, private logger: LoggerService) {
+  }
+
+  ngOnInit(): void {
+    this.messages = this.logger.fetch()
+    this.profiles = this.profileService.findAll()
+
+  }
+
+}
+.............................................................................................
+				Async Services - Rxjs - API calling
+.............................................................................................
 
 
 

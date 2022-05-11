@@ -1,4 +1,5 @@
 <div>
+    <div *ngFor='let message of messages'> {{message}} </div>
     <div *ngFor="let profile of profiles">
         <h3>Id {{profile.id}}</h3>
         <h3>Name {{profile.name}}</h3>

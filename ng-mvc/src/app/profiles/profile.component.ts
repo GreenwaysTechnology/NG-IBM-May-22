@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { LoggerService } from '../shared/logger.service';
 import { Profile } from '../types/profile.type';
 import { ProfileService } from './profile.service';
 
@@ -10,14 +11,17 @@ import { ProfileService } from './profile.service';
 export class ProfileComponent implements OnInit {
 
   //profiles 
-  profiles: Array<Profile>
+  profiles: Array<Profile> = []
+  messages: Array<String> = []
 
-  //inject ProfileService object
-  constructor(private profileService: ProfileService) {
-    this.profiles = this.profileService.findAll()
+  //inject rofileService object
+  constructor(private profileService: ProfileService, private logger: LoggerService) {
   }
 
   ngOnInit(): void {
+    this.messages = this.logger.fetch()
+    this.profiles = this.profileService.findAll()
+
   }
 
 }

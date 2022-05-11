@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { LoggerService } from '../shared/logger.service';
 import { Profile } from '../types/profile.type';
 
 @Injectable({
@@ -38,11 +39,12 @@ export class ProfileService {
 
   ];
 
-  constructor() { }
+  constructor(private logger: LoggerService) { }
 
   //biz methods
 
   public findAll(): Array<Profile> {
+    this.logger.add('findAll profiles called')
     return this.profiles
   }
 
