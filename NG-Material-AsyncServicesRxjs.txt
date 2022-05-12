@@ -1,0 +1,582 @@
+.............................................................................................
+				Async Services - Rxjs - API calling
+.............................................................................................
+
+Types of services:
+
+1.sync service
+   The controller is blocked until data is available.
+2.async service
+   The controller can continue even though the data is available at the momement.
+
+Async Service:
+ 1. Non blocking way to access data.
+
+How to implement async programming in js?
+
+Js supports async programming model by default at language level.
+
+Patterns:
+1.callback pattern
+   core pattern
+2.Promise Pattern 
+  Promise pattern is wrapper for callback pattern
+  callback pattern has some problem called callback hell.
+3.async await pattern
+
+Third party lib and arch
+
+4.Reactive Programming via rxjs
+
+
+What is Reactive Programming?
+
+An API for "asynchronous programming" with "observable streams"
+
+RX Programming = "Async Programming" + "Observable Stream"
+
+Async Programming solves the problem of concurrency with having minimum no of threads.
+
+Observable Stream solves the problem of data movement and processing.
+
+Rx programming solves "Data Processing in pipe lines in async manner".
+
+
+Data Processing can be done in two places
+
+1.In database,via SQL
+
+2.In side application, via apis
+
+for eg:
+
+i have list of employees.
+
+I want to sort employee based on highest salary to lowest salary.
+
+SQL Query.
+
+get all employees , store inside collection(List) sort the list based on highest salary to lowest salary
+
+Reactive programming focus is processing data inside application using "async api, using pipe line processing(stream)"
+
+Reactive Programming has been implemented with three major principles
+
+1.Observable Design Pattern -  Event Driven programming
+2.functional programming principles - enables declarative programming.
+3.iterator design pattern - push based iterator.
+.............................................................................................
+Core concepts:
+
+1.Publisher
+   Publisher is object who publishes the data
+
+2.Subscriber
+  Subscriber is object who listens for the data
+
+
+Publisher---publish data-----|-----|----|-------Subscriber
+                              stream
+                             |     |    |
+                         operator operator operator
+
+
+3.Operators
+   Operators are apis or methods or function which creates and process the stream.
+
+.......................................................................................
+How to begin with reactive programming?
+
+Reactive is programming is language independant, it can be used in any language , framework,server side,client side,mobile apps.
+
+Reactive Programming implementations:
+
+java :
+  rxjava
+  Project Reactor
+  mutiny
+javascript:
+  rxjs
+
+
+rxjs and angular:
+
+Angular framework has integrated rxjs for building reactive user interface apps.
+Angular has integrated async programming with rxjs for building advanced async programming.
+
+Angular has implemented rxjs at low level.
+
+1.HTTP programming/webservice calls/ajax 
+2.Inside routers
+3.Inside event handlers
+etc....
+
+.............................................................................................
+
+Publisher Objects:
+
+1.Observable
+2.Subject
+
+
+Steps:
+
+1.create stream
+   
+2.process stream
+3.consume the stream
+
+
+
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class GreeterStreamService {
+  constructor() { }
+  //stream data 
+  //here this is async with stream api
+  public sayHello():Observable<string> {
+    return new Observable(subscriber => {
+      //pushing data :  emitting events - data,error,complete
+      subscriber.next("Hello") // send data
+      subscriber.next("Hai") // send data
+      subscriber.next("welcome") // send data
+      subscriber.next("how are you") // send data
+      subscriber.complete()
+    })
+  }
+
+}
+import { Component, OnInit } from '@angular/core';
+import { GreeterStreamService } from './greeter-stream.service';
+
+@Component({
+  selector: 'app-greeter-stream',
+  templateUrl: './greeter-stream.component.html',
+  styles: [
+  ]
+})
+export class GreeterStreamComponent implements OnInit {
+
+  message: Array<string> = []
+
+  constructor(private greeterStreamService: GreeterStreamService) { }
+
+  ngOnInit(): void {
+    //subscriber 
+    this.greeterStreamService.sayHello().subscribe(data => {
+      console.log(data)
+      this.message.push(data);
+    },)
+  }
+
+}
+<div>
+    <h2>Got Data From the Stream {{message}}</h2>
+</div>
+..............................................................................................
+
+Operator category:
+
+1.creation
+2.transformation
+3.filtering
+etc..	
+https://rxjs.dev/guide/operators#categories-of-operators
+
+creation 
+ To stream from various data sources
+
+data sources:
+  array,primitive elements,promises,
+
+
+
+import { Injectable } from '@angular/core';
+import { Observable, of, from } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
+import { TODOS } from '../mock-data/todos.mock'
+
+@Injectable({
+  providedIn: 'root'
+})
+export class DataProcessingStreamService {
+
+  constructor() { }
+
+  public getValue(): Observable<number> {
+    //process the data: double the numbers
+    return of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10).pipe(
+      map(item => item * 2)
+    );
+  }
+  public findEvenNumbers(): Observable<number> {
+    //process the data: double the numbers
+    return of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10).pipe(
+      filter(item => item % 2 === 0) // return values based on tr
+    );
+  }
+  public findEvenNumbersFromArray(): Observable<number> {
+    //process the data: double the numbers
+    return from([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]).pipe(
+      filter(item => item % 2 === 0) // return values based on tr
+    );
+  }
+  public findAllCompletedTodos(): Observable<any> {
+    return from(TODOS).pipe(
+      filter(todo => todo.completed)
+    )
+  }
+
+}
+...
+
+<h1>Data Processing stream</h1>
+<h2>Map</h2>
+<ul>
+    <li *ngFor="let n of stream$">
+          <span>{{n}}</span>
+    </li>
+</ul>
+
+<h2>filter</h2>
+<ul>
+    <li *ngFor="let n of streamFilter$">
+          <span>{{n}}</span>
+    </li>
+</ul>
+
+<h2>filter-Todo</h2>
+<ul>
+    <h2>Total todos {{todos.length}}</h2>
+    <li *ngFor="let todo of todos">
+          <span>{{todo.id}} {{todo.title}}</span>
+    </li>
+</ul>
+
+import { Component, OnInit } from '@angular/core';
+import { DataProcessingStreamService } from './data-processing-stream.service';
+
+@Component({
+  selector: 'app-data-processing-stream',
+  templateUrl: './data-processing-stream.component.html',
+  styles: [
+  ]
+})
+export class DataProcessingStreamComponent implements OnInit {
+  stream$: Array<number> = [];
+  streamFilter$: Array<number> = [];
+  todos: Array<any> = []
+
+  constructor(private dataStreamService: DataProcessingStreamService) { }
+
+  ngOnInit(): void {
+    this.dataStreamService.getValue().subscribe(value => {
+      this.stream$.push(value)
+    })
+    this.dataStreamService.findEvenNumbers().subscribe(value => {
+      this.streamFilter$.push(value)
+    })
+    this.dataStreamService.findEvenNumbersFromArray().subscribe(value => {
+      this.streamFilter$.push(value)
+    })
+    this.dataStreamService.findAllCompletedTodos().subscribe(todo => {
+      this.todos.push(todo)
+    })
+  }
+
+}
+.............................................................................................
+				Error Handling
+.............................................................................................
+
+Error handling is most important in every programming.
+
+How to handle errors in rxjs?
+
+There are two ways
+
+1.using subscribe method error block
+
+subscribe(data=>{},err=>{},()=>{});
+
+1st arg : to capture data
+2nd arg : to capture error
+3nd arg : to capture completed
+
+
+import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ErrorHandlingService {
+
+  constructor() { }
+  //handling error inside subscribe method
+  public handleError__(): Observable<number> {
+    return of(1, 2, 3, 4, 5).pipe(
+      map(n => {
+        if (n === 4) {
+          throw 'four!'; //simulating error
+        }
+        return n;
+      })
+    )
+  }
+  public handleError(): Observable<number> {
+    return of(1, 2, 3, 4, 5).pipe(
+      map(n => {
+        if (n === 4) {
+          throw 'four!'; //simulating error
+        }
+        return n;
+      }),
+      catchError(err => {
+        return of(this.fallback());
+      })
+    )
+  }
+  private fallback() {
+    return 900;
+  }
+}
+import { Component, OnInit } from '@angular/core';
+import { ErrorHandlingService } from './error-handling.service';
+
+@Component({
+  selector: 'app-error-handling',
+  templateUrl: './error-handling.component.html',
+  styles: [
+  ]
+})
+export class ErrorHandlingComponent implements OnInit {
+
+  stream$: Array<number> = []
+  constructor(private errorHandler: ErrorHandlingService) { }
+
+  ngOnInit(): void {
+    this.errorHandler.handleError().subscribe(data => {
+      console.log("Success : ",data)
+    }, err => {
+      console.log('error :',err)
+    }, () => {
+      console.log('completed')
+    })
+  }
+
+}
+<div>
+  <h1>Reactive Programming Using Angular</h1>
+  <!-- <app-greeter-stream></app-greeter-stream>
+  <app-number-stream></app-number-stream>
+  <app-array-stream></app-array-stream>
+  <app-data-processing-stream></app-data-processing-stream> -->
+
+  <app-error-handling></app-error-handling>
+</div>
+..............................................................................................
+				 Resilience Operators
+
+
+1.fail fast
+	if api hits error , immediatly you throw an error, catch it or fallback it.
+2.retry
+  if api hits error , dont throw an error immediately,rather give some time recovery.
+
+import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import { map, catchError, retry } from 'rxjs/operators';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ErrorHandlingService {
+
+  constructor() { }
+  //handling error inside subscribe method
+  public handleError__(): Observable<number> {
+    return of(1, 2, 3, 4, 5).pipe(
+      map(n => {
+        if (n === 4) {
+          throw 'four!'; //simulating error
+        }
+        return n;
+      })
+    )
+  }
+  public handleError(): Observable<number> {
+    return of(1, 2, 3, 4, 5).pipe(
+      map(n => {
+        if (n === 4) {
+          console.log('hitting');
+          throw 'four!'; //simulating error
+        }
+        return n;
+      }),
+      retry(3),
+      catchError(err => {
+        return of(this.fallback());
+      })
+    )
+  }
+  private fallback() {
+    return 900;
+  }
+}
+.............................................................................................
+			MVC - Service layer integration with Web Services
+..............................................................................................
+
+
+in order to make http calls with rest api servers,js offers an object called "XMLHTTPRequest"
+
+But frameworks provide abstraction over XHR object.
+
+Angular provides XHR Abstraction - @angular/common/http
+
+Angular XHR is powered with Reactive -  XHR + REACTIVE - XHR +Streaming
+
+
+Steps:
+
+1.inject HttpClientModule inside any submodule.
+
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http'
+
+
+@NgModule({
+  declarations: [],
+  imports: [
+    CommonModule, HttpClientModule
+  ]
+})
+export class TodosModule { }
+
+2.HttpClient : Built in service
+  Performs HTTP requests. This service is available as an injectable class, with methods to perform HTTP requests.
+   
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Todo } from './todo.type';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class TodoService {
+  constructor(private http: HttpClient) { }
+
+  //biz methods to interact with backend
+  //GET  ALL todos
+  public findAllTodos(): Observable<Todo[]> {
+    const url = 'https://jsonplaceholder.typicode.com/todos';
+    return this.http.get<Todo[]>(url)
+  }
+
+}
+
+import { Component, OnInit } from '@angular/core';
+import { TodoService } from './todo.service';
+import { Todo } from './todo.type';
+
+@Component({
+  selector: 'app-todo',
+  templateUrl: './todo.component.html',
+  styles: [
+  ]
+})
+export class TodoComponent implements OnInit {
+
+  todos: Array<Todo> = [];
+  constructor(private todoService: TodoService) { }
+
+  ngOnInit(): void {
+    this.todoService.findAllTodos().subscribe(todos => {
+      this.todos = todos
+    })
+  }
+
+}
+<div>
+    <div *ngFor="let todo of todos">
+        <p>{{todo.id}} {{todo.title}} {{todo.completed ? "done" : "Not Done"}}</p>
+    </div>
+</div>
+.............................................................................................
+				With Error Handling
+.............................................................................................
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable, retry, catchError, of } from 'rxjs';
+import { Todo } from './todo.type';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class TodoService {
+  constructor(private http: HttpClient) { }
+
+  //biz methods to interact with backend
+  //GET  ALL todos
+  public findAllTodos(): Observable<Todo[]> {
+    const url = 'https://jsonplaceholder.typicode.com/todos';
+    return this.http.get<Todo[]>(url).pipe(
+      retry(3),
+      catchError(() => of<Todo[]>([{ userId: 0, id: 0, title: 'foo', completed: false }]))
+    )
+  }
+
+}
+...........................................................................................
+				CSS integration
+.............................................................................................
+
+Global CSS
+  Third party css 
+component level css
+  
+How to install ng-bootstrap?
+
+ng add @ng-bootstrap/ng-bootstrap
+
+
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+
+import { AppComponent } from './app.component';
+import { TodosModule } from './todos/todos.module';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbdCarouselBasic } from './carousel/carousel-basic.component'
+
+@NgModule({
+  declarations: [
+    AppComponent, NgbdCarouselBasic
+  ],
+  imports: [
+    BrowserModule,
+    TodosModule,
+    NgbModule
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+
+
+
+
+
+
+
+
+
+
+
