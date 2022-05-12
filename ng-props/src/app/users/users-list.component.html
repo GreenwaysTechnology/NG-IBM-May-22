@@ -1,0 +1,11 @@
+<h3>Id {{user.id}} </h3>
+<p>Name {{user.name}} </p>
+<p>UserName {{user.username}} </p>
+<p>email{{user.email}} </p>
+<!-- <address>
+            {{user.address.city}} {{user.address.zipcode}}
+        </address> -->
+<app-address [address]="user.address"></app-address>
+<!-- <h3>Company</h3>
+        <p>Company Name {{user.company.name}}</p> -->
+<app-company [company]="user.company"></app-company>

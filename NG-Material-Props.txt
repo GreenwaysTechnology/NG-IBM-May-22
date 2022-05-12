@@ -12,3 +12,171 @@ The child component is reponsible for displaying data
 We can pass data upto n of childrens
 Which is called "uni directional data flow model"
 Components can be communicated via props binding.
+
+How to pass data from the parent to child?
+
+[] - property notation
+
+<element [propertyName]="PropertyValue">
+
+PropertyValue can be primitives(string,numbers,boolean),object,array
+
+<app-address [address]="user.address" ></app-address>
+
+How child component receive property?
+
+@Input()
+.............................................................................................
+
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { UsermasterComponent } from './usermaster.component';
+import { SharedModule } from '../shared/shared.module';
+import { AddressComponent } from './address.component';
+import { CompanyComponent } from './company.component';
+import { UsersListComponent } from './users-list.component';
+
+@NgModule({
+  declarations: [
+    UsermasterComponent,
+    AddressComponent,
+    CompanyComponent,
+    UsersListComponent
+  ],
+  imports: [
+    CommonModule, SharedModule
+  ],
+  exports: [
+    UsermasterComponent,
+    AddressComponent,
+    CompanyComponent,
+    UsersListComponent
+  ]
+})
+export class UsersModule { }
+..................
+
+UserMaster:
+<div>
+    <h1>User Master Details</h1>
+    <div *ngFor="let user of users | async">
+        <app-users-list [user]="user"></app-users-list>
+    </div>
+</div>
+import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { UserService } from './user.service';
+
+@Component({
+  selector: 'app-usermaster',
+  templateUrl: './usermaster.component.html',
+  styles: [
+  ]
+})
+export class UsermasterComponent implements OnInit {
+
+  users!: Observable<any>
+  constructor(private userService: UserService) { }
+
+  ngOnInit(): void {
+    this.users = this.userService.findAll()
+  }
+
+}
+
+UserList:
+<h3>Id {{user.id}} </h3>
+<p>Name {{user.name}} </p>
+<p>UserName {{user.username}} </p>
+<p>email{{user.email}} </p>
+<!-- <address>
+            {{user.address.city}} {{user.address.zipcode}}
+        </address> -->
+<app-address [address]="user.address"></app-address>
+<!-- <h3>Company</h3>
+        <p>Company Name {{user.company.name}}</p> -->
+<app-company [company]="user.company"></app-company>
+
+
+import { Component, Input, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-users-list',
+  templateUrl: './users-list.component.html',
+  styles: [
+  ]
+})
+export class UsersListComponent implements OnInit {
+
+  @Input()
+  user:any
+  constructor() { }
+
+  ngOnInit(): void {
+  }
+
+}
+
+Address and Company:
+import { Component, Input, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-address',
+  templateUrl: './address.component.html',
+  styles: [
+  ]
+})
+export class AddressComponent implements OnInit {
+
+  @Input()
+  address!: any
+  constructor() { }
+
+  ngOnInit(): void {
+    console.log(this.address)
+  }
+
+}
+<address>
+    City {{address.city}}
+</address>
+...
+import { Component, Input, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-company',
+  templateUrl: './company.component.html',
+  styles: [
+  ]
+})
+export class CompanyComponent implements OnInit {
+
+  @Input()
+  company:any 
+  constructor() { }
+
+  ngOnInit(): void {
+  }
+
+}
+<h3>Company</h3>
+<p>Company Name {{company.name}}</p>
+
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class UserService {
+
+  constructor(private http: HttpClient) { }
+
+  //get Users
+  public findAll(): Observable<any[]> {
+    const url = 'https://jsonplaceholder.typicode.com/users';
+    return this.http.get<any[]>(url)
+  }
+}
+..............................................................................................

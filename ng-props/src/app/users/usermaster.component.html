@@ -1,0 +1,6 @@
+<div>
+    <h1>User Master Details</h1>
+    <div *ngFor="let user of users | async">
+        <app-users-list [user]="user"></app-users-list>
+    </div>
+</div>
