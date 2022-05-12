@@ -694,7 +694,7 @@ Task:
 
 ng g m footer --module=app
 
-create folder calleder footer
+create folder called footer
 update/inject footer module inside app
 
 create component, inside footer folder, inject into footer module, make it available public
@@ -1216,10 +1216,6 @@ export class ProfileComponent implements OnInit {
   }
 
 }
-.............................................................................................
-				Async Services - Rxjs - API calling
-.............................................................................................
-
 
 
 

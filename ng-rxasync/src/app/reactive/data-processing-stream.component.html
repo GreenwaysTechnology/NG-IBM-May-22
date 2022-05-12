@@ -1,0 +1,22 @@
+<h1>Data Processing stream</h1>
+<h2>Map</h2>
+<ul>
+    <li *ngFor="let n of stream$">
+          <span>{{n}}</span>
+    </li>
+</ul>
+
+<h2>filter</h2>
+<ul>
+    <li *ngFor="let n of streamFilter$">
+          <span>{{n}}</span>
+    </li>
+</ul>
+
+<h2>filter-Todo</h2>
+<ul>
+    <h2>Total todos {{todos.length}}</h2>
+    <li *ngFor="let todo of todos">
+          <span>{{todo.id}} {{todo.title}}</span>
+    </li>
+</ul>

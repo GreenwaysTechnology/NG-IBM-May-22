@@ -1,0 +1,120 @@
+ng add @ng-bootstrap/ng-bootstrap
+https://github.com/FortAwesome/angular-fontawesome
+
+
+lazy loaded module:
+
+E:\session\IBM\2022\may\ng-session\ng-demo>ng g m profile --routing
+CREATE src/app/profile/profile-routing.module.ts (250 bytes)
+CREATE src/app/profile/profile.module.ts (284 bytes)
+
+>ng g c profile/profilelist --flat=true --module=profile
+CREATE src/app/profile/profilelist.component.html (26 bytes)
+CREATE src/app/profile/profilelist.component.spec.ts (661 bytes)
+CREATE src/app/profile/profilelist.component.ts (295 bytes)
+CREATE src/app/profile/profilelist.component.css (0 bytes)
+UPDATE src/app/profile/profile.module.ts (376 bytes)
+
+child routes:
+ng g c dashboard/home --flat=true --module=dashboard
+CREATE src/app/dashboard/home.component.html (19 bytes)
+CREATE src/app/dashboard/home.component.spec.ts (612 bytes)
+CREATE src/app/dashboard/home.component.ts (267 bytes)
+CREATE src/app/dashboard/home.component.css (0 bytes)
+UPDATE src/app/dashboard/dashboard.module.ts (500 bytes)
+
+ng g c dashboard/contact --flat=true --module=dashboard
+CREATE src/app/dashboard/contact.component.html (22 bytes)
+CREATE src/app/dashboard/contact.component.spec.ts (633 bytes)
+CREATE src/app/dashboard/contact.component.ts (279 bytes)
+CREATE src/app/dashboard/contact.component.css (0 bytes)
+UPDATE src/app/dashboard/dashboard.module.ts (578 bytes)
+
+ng g c dashboard/services --flat=true --module=dashboard
+CREATE src/app/dashboard/services.component.html (23 bytes)
+CREATE src/app/dashboard/services.component.spec.ts (640 bytes)
+CREATE src/app/dashboard/services.component.ts (283 bytes)
+CREATE src/app/dashboard/services.component.css (0 bytes)
+UPDATE src/app/dashboard/dashboard.module.ts (659 bytes)
+
+
+
+
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { AboutComponent } from './about.component';
+import { AdminComponent } from './admin.component';
+import { FooComponent } from './foo.component';
+import { HomeComponent } from './home.component';
+import { ServicesComponent } from './services.component';
+
+const routes: Routes = [
+  {
+    path: '', component: AdminComponent,
+    children: [
+      { path: 'home', component: HomeComponent },
+      { path: 'about', component: AboutComponent },
+      { path: 'services', component: ServicesComponent },
+      { path: '', redirectTo: "/admin/home", pathMatch: 'full' },
+
+    ]
+  }
+];
+
+@NgModule({
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
+})
+export class DashboardRoutingModule { }
+
+Adding menus
+<div>
+    <nav>
+        <ul>
+            <li><a routerLink="./home">Home</a></li>
+            <li><a routerLink="./about">About</a></li>
+            <li><a routerLink="./services">Services</a></li>
+
+        </ul>
+    </nav>
+    <router-outlet></router-outlet>
+    <h1>Footer</h1>
+</div>
+
+main app:
+<div class="container">
+    <h1>Router App</h1>
+    <hr>
+    <div>
+        <nav>
+            <ul>
+                <li><a routerLink="login">Login</a></li>
+                <li><a routerLink="admin">Admin</a></li>
+                <li><a routerLink="profile">Profile</a></li>
+    
+            </ul>
+        </nav>
+        <router-outlet></router-outlet>
+        <h1>Footer</h1>
+    </div>
+    <hr>
+    <router-outlet></router-outlet>
+</div>
+............................................................................................
+Programtic Routing:
+
+export class ProfilelistComponent implements OnInit {
+
+  constructor(private router: Router) { }
+
+  ngOnInit(): void {
+  }
+  public Goto() {
+    this.router.navigate(["admin"])
+  }
+
+}
+<div>
+    <button (click)="Goto()">Admin</button>
+</div>
+

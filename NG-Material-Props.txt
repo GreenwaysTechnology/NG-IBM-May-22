@@ -1,0 +1,14 @@
+				  Props Pattern
+..............................................................................................
+
+In Component driven architecture (Angular,React,Vue), follows some principles
+
+Parent Component and Child Component:
+....................................
+
+The Parent component is responsible for retriving data from the service layer
+The child component is reponsible for displaying data 
+
+We can pass data upto n of childrens
+Which is called "uni directional data flow model"
+Components can be communicated via props binding.
