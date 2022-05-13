@@ -180,3 +180,92 @@ export class UserService {
   }
 }
 ..............................................................................................
+			   Attribute Binding
+..........................................................................................
+
+Any html element which has attribute
+
+<img src="log.png" />
+      |
+attribute
+
+Two types of attribute binding
+
+1.static attribute
+   attribute values are hardcoded, cant be changed once view is rendered
+ <img src="log.png" />
+ <div hidden>
+ <div enabled>
+2.dynamic attribute
+   attribute values are dynamic, can be changed once view is rendered.
+
+ <img [src]="variable" />
+
+
+<div class="container">
+  <h1>Users App-Property Pattern-Uni Directional Data Flow</h1>
+  <hr>
+  <!-- <app-usermaster></app-usermaster> -->
+  <hr>
+  <h1>Attribute Binding</h1>
+  <img src="favicon.ico"/>
+  <img [src]="logo"/>
+  <div [hidden]="show">Hide Me</div>
+</div>
+
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+  title = 'ng-props';
+  logo: string = "favicon.ico"
+  show:boolean = false
+}
+...........................................................................................
+				   Class and Style Binding
+...........................................................................................
+
+Dynamically if you want to change css
+
+  <h1>CSS binding</h1>
+  <div style="color:red">Static style Attribute </div>
+  <div class="intro">Static css Attribute </div>
+  <div [class.highlight]="showHighlight">Enable</div>
+</div>
+.............................................................................................
+
+[] notation is used
+
+1.to send data from parent component to child component
+2.to supply dynamic html attribute values
+3.to apply dynamic css to an html element
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

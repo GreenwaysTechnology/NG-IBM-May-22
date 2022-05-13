@@ -1,0 +1,311 @@
+				  Event Binding
+..............................................................................................
+                                 How to enable user interactions?
+..............................................................................................
+
+How to implement event  handling?
+
+Plain js:
+
+<button onclick="listener()">Click</button>
+
+In Angular , event handling is done using a symbol called ()
+
+<button (NameoftheEvent)="listener()">Click</button>
+<button (click)="listener()">Click</button>
+..............................................................................................
+					$event
+.............................................................................................
+
+$event is built in reference variable provided by angular to represent "Event" Object of Javascript
+
+txtBox.addEventListenter(function(evt){
+   evt.target.value
+})
+...........................................................................................
+				 Two way data binding
+............................................................................................
+<h1>Getting input from the User</h1>
+<h2>{{text}}</h2>
+<input (input)="readInput($event)">
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+  //state 
+   text:string = ""
+  //behaviour: event handler
+  public onSubmit() {
+    //logic to be written when some event happens
+    alert('Hello')
+  }
+  onReceive(message: string) {
+    alert(message)
+  }
+  readInput(evt: any) {
+    // console.log('input listener is called')
+    console.log(evt.target.value)
+    this.text = evt.target.value
+  }
+}
+......................................................................................
+					Two way data binding
+.......................................................................................
+
+Transfering data from the controller to view and view to controller in both directions based on user interaction via events.
+
+in order to implement two way data binding angular offers many patterns.
+
+1.With listener method
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+  //state 
+   text:string = ""
+  readInput(evt: any) {
+    // console.log('input listener is called')
+    console.log(evt.target.value)
+    this.text = evt.target.value
+  }
+}
+  <h1>Getting input from the User</h1>
+  <h2>Two way data binding</h2>
+  <h2>{{text}}</h2>
+  <input (input)="readInput($event)">
+
+2.Without event listener
+  <div>
+    <h3>Without Listener</h3>
+    <h3>{{textOne}}</h3>
+    <input (input)="textOne=$event.target.value">
+  </div>
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+  //state 
+   textOne:string=""
+}
+
+
+3.With default :Property binding + event binding
+  <div>
+    <h3>Property Binding + Event Binding </h3>
+    <h3>{{textTwo}}</h3>
+    <input  [value]="textTwo" (input)="textTwo=$event.target.value">
+</div>
+
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+  //state 
+  textTwo:string="defaultvalue"
+}
+
+4.Property Binding + Event Binding = Banana Box Notation [()], and ngModel
+
+ngModel is object , used to transfer data between view and controller
+
+ <div>
+        <h3>Property Binding + Event Binding = Banana Box Notation [()] </h3>
+        <h3>{{messageThree}}</h3>
+        <input [(ngModel)]="messageThree">
+    </div>
+
+ Can't bind to 'ngModel' since it isn't a known property of 'input'.
+
+24   <input [(ngModel)]="textThree">
+
+if you get this error, you have to inject module called "formsModule".
+
+ngModel object belongs Forms module , so we need FormsModule object
+............................................................................................
+
+
+
+<div class="container">
+  <h1>Event Handler</h1>
+  <button (click)="onSubmit()">Click</button>
+  <!-- Pass data to listener -->
+  <hr>
+  <button class="btn btn-success" (click)="onReceive('hello how are you?')">SendData</button>
+  <h1>Getting input from the User</h1>
+  <h2>Two way data binding</h2>
+  <h2>{{text}}</h2>
+  <input (input)="readInput($event)">
+  <div>
+    <h3>Without Listener</h3>
+    <h3>{{textOne}}</h3>
+    <input (input)="textOne=$event.target.value">
+  </div>
+  <div>
+    <h3>Property Binding + Event Binding </h3>
+    <h3>{{textTwo}}</h3>
+    <input  [value]="textTwo" (input)="textTwo=$event.target.value">
+</div>
+<div>
+  <h3>Property Binding + Event Binding = Banana Box Notation [()] </h3>
+  <h3>{{textThree}}</h3>
+  <input [(ngModel)]="textThree">
+</div>
+
+<div>
+  <h3>More Text Box</h3>
+   {{userInfo | json}}
+  <div>
+    <label>First Name</label>
+    <input [(ngModel)]="userInfo.firstName">
+  </div>
+  <div>
+    <label>Last Name</label>
+    <input [(ngModel)]="userInfo.lastName">
+  </div>
+  <div>
+    <label>City</label>
+    <input [(ngModel)]="userInfo.city">
+  </div>
+</div>
+</div>
+
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+  //state 
+  text: string = ""
+  textOne: string = ""
+  textTwo: string = "defaultvalue"
+  textThree: String = "defaultValue"
+
+  userInfo = {
+    firstName: '',
+    lastName: '',
+    city: ''
+  }
+
+  //behaviour: event handler
+  public onSubmit() {
+    //logic to be written when some event happens
+    alert('Hello')
+  }
+  onReceive(message: string) {
+    alert(message)
+  }
+  readInput(evt: any) {
+    // console.log('input listener is called')
+    console.log(evt.target.value)
+    this.text = evt.target.value
+  }
+}
+..............................................................................................
+				.............................................................................................
+				Custom Events -Component Communication
+..............................................................................................
+
+Types of events:
+
+1.dom events - click,input,keypress.......
+2.custom events - events for custom elements
+
+Why custom events?
+
+Component communcation:
+
+1.parent to child - via props pattern
+2.child to parent - via custom events
+3.across components -  via services
+
+
+parent component
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-parent',
+  template: `
+     <h1>Parent</h1>
+        <h2>Data From Child {{text}} </h2>
+          <ul>
+             <li *ngFor="let quote of quotes">
+                 {{quote}}
+             </li>
+          <ul>
+      <hr>
+      <app-child (onSendRequest)="receiveData($event)" ></app-child>
+  `,
+  styles: [
+  ]
+})
+export class ParentComponent implements OnInit {
+
+  text: string = ""
+  quotes: Array<string> = []
+  constructor() { }
+
+  ngOnInit(): void {
+  }
+  //listener to read data which sent by client
+  public receiveData(evt: any) {
+    //alert(evt)
+    this.text = evt
+    this.quotes.push(evt)
+  }
+
+}
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+
+@Component({
+  selector: 'app-child',
+  template: `
+       <h1>Child </h1>
+      <input [(ngModel)]="text">
+      <button (click)="sendDataToParent()">Send Data To parent</button>
+  `,
+  styles: [
+  ]
+})
+export class ChildComponent implements OnInit {
+
+  //Used to send data to parent
+  @Output()
+  onSendRequest = new EventEmitter<string>();
+  text: string = ""
+
+
+  constructor() { }
+
+  ngOnInit(): void {
+  }
+  sendDataToParent() {
+    //emit/send data to parent
+    this.onSendRequest.emit(this.text)
+    this.text = ""
+  }
+
+}
+
+
+
+
+

@@ -1,0 +1,17 @@
+<div>
+  <app-list></app-list>
+  <h1>App Component</h1>
+  <ul>
+    <li *ngFor="let skill of skills">
+      <span>{{skill}}</span>
+    </li>
+  </ul>
+  <h1>If Condition</h1>
+  <app-conditionalrendering></app-conditionalrendering>
+  <h1>Switch Case</h1>
+  <app-switchcase></app-switchcase>
+  <h1>Custom Attribute Directive</h1>
+  <div appHighlight>
+    <h2>Hello</h2>
+  </div>
+</div>

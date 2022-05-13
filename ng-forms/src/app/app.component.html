@@ -1,0 +1,51 @@
+<div class="container">
+  <h1>Forms</h1>
+  <!-- Todo: remove this in production -->
+  <!-- {{model | json}} -->
+
+  <!-- Validation information is avaiable in NgFormDirect -->
+  <!-- heroForm is just reference variable , stores NgForm Object, which is used for validation -->
+
+  <div [hidden]="submitted" >
+    <form #heroForm="ngForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <!-- ngModel is used for data binding and helps to enable validation -->
+        <input type="text" [(ngModel)]="model.name" #errorMsg1="ngModel" name="name" class="form-control" id="name"
+          required>
+        <div [hidden]="errorMsg1.valid || errorMsg1.pristine" class="alert alert-danger"> Name is Required </div>
+
+        <div class="form-group">
+          <label for="alterEgo">AlterEgo</label>
+          <input type="text" [(ngModel)]="model.alterEgo" name="alterEgo" class="form-control" id="alterEgo"
+            #errorMsg2="ngModel" required>
+          <div [hidden]="errorMsg2.valid || errorMsg2.pristine" class="alert alert-danger"> Ego is Required </div>
+        </div>
+
+        <div class="form-group">
+          <label for="power">Hero Power</label>
+          <select [(ngModel)]="model.power" name="power" class="form-control" id="power" required>
+            <option *ngFor="let pow of powers" [value]="pow">{{pow}}</option>
+          </select>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-success" [disabled]="!heroForm.form.valid">Submit</button>
+    </form>
+  </div>
+  <div [hidden]="!submitted">
+    <h2>You submitted the following:</h2>
+    <div class="row">
+      <div class="col-xs-3">Name</div>
+      <div class="col-xs-9">{{ model.name }}</div>
+    </div>
+    <div class="row">
+      <div class="col-xs-3">Alter Ego</div>
+      <div class="col-xs-9">{{ model.alterEgo }}</div>
+    </div>
+    <div class="row">
+      <div class="col-xs-3">Power</div>
+      <div class="col-xs-9">{{ model.power }}</div>
+    </div>
+    <br>
+    <button type="button" class="btn btn-primary" (click)="submitted=false">Edit</button>
+  </div>

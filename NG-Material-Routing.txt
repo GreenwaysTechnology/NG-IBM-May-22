@@ -1,0 +1,229 @@
+					Routing
+..............................................................................................
+What is routing?
+ Navigation between pages.
+
+Routing is implemented in web apps via links - hyper links.
+
+HTML 5 offers hyper links through which we can navigate from one page to another page.
+
+HTML offers an address to which we will be redirected- URL,URI.
+
+Types of navigation
+
+1.static  - html
+2.dynamic  - via server side programs
+
+In 2008, html 5 introduced dynamic navigation inside browser via javascript api called history which is object contains apis related for navigation.
+  This is brith of single page web apps.
+
+single page web apps(spa) contains one physical page we call landing page - home page
+
+How to create single page Application?
+
+SPAs use AJAX and HTML5 to create fluid and responsive Web apps, without constant page reloads. However, this means much of the work happens on the client side, in JavaScript.
+
+SPA Stack:
+
+javascript
+HTML 5
+CSS 3
+
+Frameworks and SPA :
+
+ Every client side js frameworks today offers spa implementation.
+ Angular provides a spa implemenation via "@angualr/routing" project.
+
+Routing Core Concepts:
+
+1.URL Patterns
+
+http://www.mydomain.com/index.html - static url
+http://www.mydomain.com/contactus.pdf -static url
+http://www.mydomain.com/login.aspx / login.jsp /login.php  - dynamic content url
+
+http://www.mydomain.com/api/users/comments  -  Resource based url - REST API
+
+
+Spa url patterns: hashbang url pattern
+
+http://www.mydomain.com/index.html#contactus
+http://www.mydomain.com/index.html#products
+http://www.mydomain.com/index.html#profiles
+
+spa simple syntax : here landing page and # symbol not req.which is implict.
+http://www.mydomain.com/profiles
+
+2.URLs AND page
+
+ Every url is mapped with Component which display content of page.
+
+///////////////////////////////////////////////////////////////////////////////////////////
+				RouterModule
+...........................................................................................
+
+RouterModule Offers lot of objects.
+
+RouterModule :
+
+ Like other modules , Router module cant be injected into main or sub modules.
+
+Before Injecting:
+   We need to configure router information called "routes"
+   routes explain navigation rules.
+
+Steps:
+
+1.define navigation rule
+
+2.using navigation rule you have to inject into main module or submodule.
+class RouterModule {
+  static forRoot(routes: Routes, config?: ExtraOptions): ModuleWithProviders<RouterModule>
+  static forChild(routes: Routes): ModuleWithProviders<RouterModule>
+}
+
+imports : [RouterModule.forRoot(configuration)]
+or
+imports : [RouterModule.forChild(configuration)]
+
+Router configuration is defined as array of routes
+
+const routes:Routes = [
+ {path:'home', component:HomeComponent}
+]
+imports : [RouterModule.forRoot(routes)]
+or
+imports : [RouterModule.forChild(routes)]
+
+
+Angular is highly modular, you have to build apps modular way including routings.
+
+
+
+2.Place Holder : Router Module provides built in place holder component
+ <router-outlet>
+
+3.Link attribute dirctive
+
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { ContactComponent } from './contact/contact.component';
+import { PageNotFoundComponent } from './error/page-not-found.component';
+import { HomeComponent } from './home/home.component';
+
+const routes: Routes = [
+  {
+    path: 'home', component: HomeComponent,
+  },
+  {
+    path: 'contact', component: ContactComponent,
+  },
+  { path: '', redirectTo: "/home", pathMatch: 'full' },
+  {
+    path: '**', component: PageNotFoundComponent,
+  }
+];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }
+
+
+
+<div class="container">
+  <h1 style="text-align: center;">Router App</h1>
+  <hr>
+  <ul>
+    <a>
+      <li routerLink="/home">Home</li>
+    </a>
+    <a>
+      <li routerLink="/contact">Contact</li>
+    </a>
+  </ul>
+  <router-outlet></router-outlet>
+</div>
+..............................................................................................
+			How to modualize routing and lazy loading
+
+ng g m heros --routing
+
+
+>ng g m heros --routing
+CREATE src/app/heros/heros-routing.module.ts (248 bytes)
+CREATE src/app/heros/heros.module.ts (276 bytes)
+
+
+....
+
+How to do programmtic routing?
+
+
+when i click button, or img, some thing, you want to redirect to some page?
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { HeroService } from './hero.service';
+
+@Component({
+  selector: 'app-hero',
+  templateUrl: 'hero.component.html'
+})
+export class HeroComponent implements OnInit {
+
+  // heroes!: Observable<any[]>
+  heroes: Array<any> = []
+  constructor(private heroService: HeroService, private router: Router) { }
+
+
+  ngOnInit(): void {
+    //  this.heroes = this.heroService.findAll()
+    this.heroService.findAll().subscribe(heroes => {
+      console.log(heroes)
+      this.heroes = heroes
+    })
+  }
+  goToHome() {
+    this.router.navigate(['home'])
+  }
+
+}
+
+<div>
+    <!-- {{heroes | json }} -->
+    <ul>
+        <li *ngFor="let hero of heroes">
+            <span>{{hero.id}} {{hero.name}}</span>
+        </li>
+    </ul>
+    <button (click)="goToHome()">Go to Home</button>
+</div>
+..............................................................................................
+
+/product/:id
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
